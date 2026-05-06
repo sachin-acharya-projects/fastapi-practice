@@ -42,7 +42,6 @@ install: $(VENV_DIR) ## Create venv, install dependencies and hooks
 
 dev: ## Run development server locally
 	@echo "Starting development server..."
-	$(PIP) install -e ".[dev]"
 	$(UVICORN) app.main:app --reload --host 0.0.0.0 --port $(PORT)
 
 lint: ## Run linters (ruff and mypy)
