@@ -1,4 +1,4 @@
-from app.schemas.product import Product
+from app.schemas.product import Product, ProductCreate
 from app.services.base import Service
 
-product_service = Service[Product, str]("products")
+product_service = Service[Product, str, ProductCreate]("products")

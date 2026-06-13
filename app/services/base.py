@@ -10,10 +10,11 @@ if TYPE_CHECKING:
     from pydantic import BaseModel
 
 T = TypeVar("T", bound="BaseModel")
+C = TypeVar("C", bound="BaseModel")
 PK = TypeVar("PK")
 
 
-class Service[T: BaseModel, PK]:
+class Service[T: BaseModel, PK, C: BaseModel]:
     default_pk: str = "id"
 
     def __init__(self, table: str, default_pk: str | None = None) -> None:
@@ -42,9 +43,11 @@ class Service[T: BaseModel, PK]:
     def list(self) -> list[T]:
         return self._get_table()
 
-    def create(self, item: T) -> T:
-        self._get_table().append(item)
-        return item
+    def create(self, item: C) -> T:
+        _item = cast("T", item.model_dump())
+
+        self._get_table().append(_item)
+        return _item
 
     def filter(self, *, first: bool = False, **filters) -> builtins.list[T] | T | None:
         results = [item for item in self._get_table() if self._match(item, **filters)]
